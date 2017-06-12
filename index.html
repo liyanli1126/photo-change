@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>图片切换</title>
+	<style type="text/css">
+		.box{
+			width: 400px;
+			height: 200px;
+			position: absolute;
+			left: calc(50% - 200px);
+			overflow: hidden;
+			border: 1px solid #000;
+		}
+		a{
+			text-decoration: none;
+			color: #eee;
+			position: absolute;
+			left: 0;
+			top: 0;
+			font-size: '微软雅黑';
+		}
+		.btn,.btn1{
+			width: 50px;
+			height: 20px;
+		}
+		.btn{
+			position: absolute;
+			left: 0;
+			top: 90px;
+		}
+		.btn1{
+			position: absolute;
+			right: 0;
+			top: 90px;
+		}
+		.bgc{
+			width: 50px;
+			height: 20px;
+			background: #ccc;
+			opacity: 0.5;
+			display: inline-block;
+		}
+		.btn:hover .bgc,.btn1:hover .bgc{
+			background: #eee;
+			opacity: 0.5;
+		}
+		ul{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		.list{	
+			/*width: 400px;*/
+			height: 200px;
+			background: blue;
+			overflow: -hidden;
+			position: absolute;
+			top: 0;
+		}
+		.item{
+			width: 400px;
+			height: 200px;
+			overflow: hidden;
+			float: left;
+			
+		}
+		.span{
+			color: #fff;
+			position: absolute;
+			left: 180px;
+			top: 0;
+		}
+		.spans{
+			color: #fff;
+			position: absolute;
+			left: 180px;
+			bottom: 0;
+		}
+	</style>
+</head>
+<body>
+	<div class="box">	
+		<div class="btn">
+			<span class="bgc"></span>
+			<a href="javascript:;" class="prev">上一页</a>
+		</div>
+		<div class="btn1">
+			<span class="bgc"></span>
+			<a href="javascript:;" class="next">下一页</a>
+		</div>				
+		<img src="" class="photo"/>
+		<span class="span">正在加载</span>
+		<span class="spans"></span>
+	</div>
+	<script type="text/javascript">
+		// 上一页按钮
+		var prev = document.querySelector('.prev');
+		// 下一页按钮
+		var next = document.querySelector('.next');
+		// 图片的文字按钮
+		var span = document.querySelector('.span');
+		// 显示的第几张图片按钮
+		var spans = document.querySelector('.spans');
+		// 图片按钮
+		var photo = document.querySelector('.photo');
+		// 声明一个数组，存放所有的图片
+		var oImg = ['img/timg.jpg','img/timg (1).jpg','img/timg (2).jpg','img/timg (3).jpg'];
+		// 所有图片的文字描述
+		var oText = ['湖水','雪山','日常','湖光'];
+		// 声明一个变量
+		var num = 0;
+
+		function fn(){
+			// 图片的内容
+			photo.src = oImg[num];
+			// 文字的内容
+			span.innerHTML = oText[num];
+			// 第几张图片的
+			spans.innerHTML = num+1+'/'+oImg.length;
+		}
+		// 先执行
+		fn();
+			// 点击上一页按钮时，如果是第一张，图片
+			// 就是最后一张
+			prev.onclick = function (){
+				num--;
+				if(num == -1){
+					num = oImg.length-1;
+				}
+				fn();
+
+			}
+			// 点击上一页按钮时，如果是最后一张，图片
+			// 就是第一张
+			next.onclick = function (){
+				num++;
+				if(num == oImg.length){
+					num = 0;
+				}
+				fn();
+			}
+		
+		
+		function Tab(){//把不同的放在构造函数里
+			this.prev = document.querySelector('.prev');
+			this.next = document.querySelector('.next');
+			this.span = document.querySelector('.span');
+			this.spans = document.querySelector('.spans');
+			this.photo = document.querySelector('.photo');
+			this.oImg = ['img/timg.jpg','img/timg (1).jpg','img/timg (2).jpg','img/timg (3).jpg'];
+			this.oText = ['湖水','雪山','日常','湖光'];
+			this.num = 0;
+		}
+
+		// 相同的放在原型下
+		Tab.prototype.init = function (){
+			var This = this;		
+			this.prev.onclick = function (){
+				/*this指的是prev、next，this.num是undefined，要声明变量This执行的是构造函数*/
+				This.num--;
+				if(This.num == -1){
+					This.num = This.oImg.length-1;
+				}
+				This.change();
+			}
+			this.next.onclick = function (){
+				This.num++;
+				if(This.num == This.oImg.length){
+					This.num = 0;
+				}
+				This.change();
+			}
+
+
+		}
+		// 图片
+		Tab.prototype.change = function (){
+			this.photo.src = this.oImg[this.num];
+			this.span.innerHTML = this.oText[this.num];
+			this.spans.innerHTML = this.num+1+'/'+this.oImg.length;
+		}
+
+		var t1 = new Tab();
+		t1.init();
+		//在没有点击时候，要先页面要先显示图片，所有要先执行 change()函数
+		t1.change();
+	</script>
+
+</body>
+</html>
